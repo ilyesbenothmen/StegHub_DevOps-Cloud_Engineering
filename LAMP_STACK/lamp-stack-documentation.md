@@ -14,5 +14,15 @@ to connect to the new created instance :
 
 ```bash
 chmod 0400 .ssh/devops-lab1.pem
-ssh -i .ssh/devops-lab1.pem ec2-98-93-227-71.compute-1.amazonaws.com
+ssh -i .ssh/devops-lab1.pem ubuntu@ec2-98-93-227-71.compute-1.amazonaws.com
 ```
+### Step1 install Apache and Update the Firewall
+The first rule of thumb for any system administrator is to keep the operating system up to date.
+
+>[!TIP]
+>It is important to note that using the root account is not a good practice. Instead, you should use a sudo‑enabled user. In our case, ubuntu will be our privileged user.
+```bash
+sudo apt update
+sudo apt install apache2
+```
+[!alt](images/3.png)
