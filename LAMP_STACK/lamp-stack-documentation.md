@@ -26,7 +26,9 @@ sudo apt update
 sudo apt install apache2
 ```
 ![alt](images/3.png)
-> [!WARNING]
-> this is a test
-> [!NOTE]
-> yet another test
+
+>[!WARNING]
+>this is a test
+
+>[!NOTE]
+>yet another test
