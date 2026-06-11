@@ -28,5 +28,5 @@ sudo apt install apache2
 ![alt](images/3.png)
 > [!WARNING]
 > this is a test
-> [!IMPORTANT]
+> [!NOTE]
 > yet another test
