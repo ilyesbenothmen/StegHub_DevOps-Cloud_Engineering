@@ -32,3 +32,6 @@ sudo apt install apache2
 
 >[!NOTE]
 >yet another test
+
+>[!IMPORTANT]
+>yet another test
