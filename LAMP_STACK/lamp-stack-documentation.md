@@ -25,4 +25,4 @@ The first rule of thumb for any system administrator is to keep the operating sy
 sudo apt update
 sudo apt install apache2
 ```
-[!alt](images/3.png)
+![alt](images/3.png)
