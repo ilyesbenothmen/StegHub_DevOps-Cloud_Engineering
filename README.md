@@ -11,6 +11,9 @@ This repository is built using the following technologies:
 ### Infrastructure & Deployment
  - **Nginx**
  - **Docker**
+### Automation:
+ - **Terraform**
+ - **Ansible**
 
 ### Database:
  - **Mysql**
