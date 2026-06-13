@@ -82,11 +82,20 @@ Now we need to install the core PHP packages that will allow us to run server‑
 ```
 ![alt](images/14.png)
 Now check the PHP version
+
 ![alt](images/15.png)
 
 Now we are done with PHP framework !
 
-At this point, the LAMP stack is already installed, and to host multiple services on the same server, we need to configure virtual hosts (vhosts).
+At this point, the LAMP stack is already installed,
+### Component:
+- [x] Linux Ubuntu
+- [x] Apache
+- [x] Mysql
+- [x] PHP
+
+>[!Note]
+>To host multiple services on the same server, we need to configure virtual hosts (vhosts).
 
 
 
