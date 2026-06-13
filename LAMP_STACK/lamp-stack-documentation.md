@@ -45,3 +45,10 @@ Now, to check that our service is reachable, we first need to determine the publ
 > There is a reliable way to get the public IP address from the EC2 instance metadata service.
 ![alt](images/9.png)
 
+### Step2 Installing Mysql
+MySQL is a relational database system that is widely used and commonly paired with PHP and Apache.
+In our lab, we are going to install MySQL with its basic features in the recommended way, to ensure a minimum level of security and reachability.
+```bash
+    sudo apt install mysql-server
+```
+![alt](images/10.png)
