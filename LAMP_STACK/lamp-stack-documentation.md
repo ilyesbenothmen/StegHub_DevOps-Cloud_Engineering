@@ -52,3 +52,40 @@ In our lab, we are going to install MySQL with its basic features in the recomme
     sudo apt install mysql-server
 ```
 ![alt](images/10.png)
+
+When the installation is finished , log in to mysql by typing:
+```bash
+    sudo mysql
+```
+run the following sql:
+```sql
+    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Pass@123$';
+```
+this will connect to mysql server and give a prompt like the following:
+
+![alt](images/11.png)
+
+To secure the installation by removing anonymous users and test schemas , run :
+```bash
+    sudo mysql_secure_installation
+```
+![alt](images/13.png)
+
+
+
+### Step3 Installing PHP
+
+Now we need to install the core PHP packages that will allow us to run server‑side processing.
+
+```bash
+    sudo apt install php libapache2-mod-php php-mysql
+```
+![alt](images/14.png)
+Now check the PHP version
+![alt](images/15.png)
+Now we are done with PHP framework !
+At this point, the LAMP stack is already installed, and to host multiple services on the same server, we need to configure virtual hosts (vhosts).
+
+
+
+
