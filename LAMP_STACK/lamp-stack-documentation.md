@@ -27,11 +27,13 @@ sudo apt install apache2
 ```
 ![alt](images/3.png)
 
->[!WARNING]
->this is a test
-
->[!NOTE]
->yet another test
-
->[!IMPORTANT]
->yet another test
+To verify the status of the web server , run :
+```bash
+    sudo systemctl status apache2
+```
+![alt](images/4.png)
+The service is up and running ,you can run the following command :
+```bash
+    curl http://localhost:80
+```
+![alt](images/5.png)
