@@ -1,7 +1,7 @@
 # StegHub_DevOps-Cloud_Engineering
 
 ## Technologies Used :
-This repository is built using the following technologies:
+This repository showcases the following technologies:
 
 ### Backend:
  - **PHP** 
