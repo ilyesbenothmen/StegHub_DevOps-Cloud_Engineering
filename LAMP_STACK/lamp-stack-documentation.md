@@ -97,6 +97,50 @@ At this point, the LAMP stack is already installed,
 >[!Note]
 >To host multiple services on the same server, we need to configure virtual hosts (vhosts).
 
+### Step4 Creating a virtual host for your website using Apache
 
+We will create a domain called projectlamp. As you know, the default document root in Apache is /var/www/html. We will keep this default and create a /var/www/projectlamp directory, then assign the required ownership and permissions.
+```bash
+    sudo mkdir /var/www/projectlamp
+    sudo chown -R $USER:$USER /var/www/projectlamp
+```
+Now we will create a new configuration file in apache by running:
+```bash
+    sudo vi /etec/apache2/sites-available/projectlamp.conf
+```
+and paste the following configuration:
+![alt](images/19.png)
 
+you can use **a2ensite** command to enable the new virtual host, by running
 
+```bash
+    sudo a2ensite projectlamp
+```
+to disable default sites use **a2dissite** command like
+
+```bash
+    sudo a2dissite 000-default
+```
+to check the syntax use :
+
+```bash
+    sudo apache2ctl configtest
+```
+we need to reload the config 
+
+```bash
+    sudo systemctl reload apache2.service
+```
+![alt](images/16.png)
+
+now create an index.php file and test the website
+
+![alt](images/20.png)
+
+and you get the following rendering:
+
+![alt](images/17.png)
+
+### Conclusion:
+
+Through this project, we have completed the basic installation process to set up a scalable **LAMP** web server on an **AWS EC2** instance.
