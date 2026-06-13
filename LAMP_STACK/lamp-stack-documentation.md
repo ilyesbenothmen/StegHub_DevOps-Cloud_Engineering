@@ -141,6 +141,26 @@ and you get the following rendering:
 
 ![alt](images/17.png)
 
+### Step 5 Enable PHP on the website:
+With the DirectoryIndex directive in Apache, index.html will take precedence over index.php, which is very useful during maintenance activities. A system administrator can create an index.html file containing an apology or maintenance message, and after the work is completed, simply rename or delete that HTML file.
+
+In order to change that default behaviour , you'll need to edit /etc/apache2/mods-enabled/dir.conf 
+![alt](images/21.png)
+
+After that, reload Apache so that the changes take effect.
+Create a file named index.php and populate it with the following dummy code.
+```php
+<?php
+phpinfo();
+>
+```
+Refresh your browser , and you'll get a page similar to the following:
+![alt](images/18.png)
+After checking the configuration of your server , it is best to delete the file by running:
+
+```bash
+    sudo rm -f /var/www/projectlamp/index.php
+```
 ### Conclusion:
 
 Through this project, we have completed the basic installation process to set up a scalable **LAMP** web server on an **AWS EC2** instance.
