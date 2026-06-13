@@ -37,3 +37,11 @@ The service is up and running ,you can run the following command :
     curl http://localhost:80
 ```
 ![alt](images/5.png)
+Right now, the service is up and reachable locally, but what if we want to publish it? Easy: we need to create an inbound rule to allow traffic from the internet. In our case, I checked my public IP address and authorized only that address.
+![alt](images/6.png)
+Now, to check that our service is reachable, we first need to determine the public IP. The easiest way is to get it from the instance details, but personally I prefer to use the DNS name.
+![alt](images/7.png)
+> [!NOTE]
+> There is a reliable way to get the public IP address from the EC2 instance metadata service.
+![alt](images/9.png)
+
