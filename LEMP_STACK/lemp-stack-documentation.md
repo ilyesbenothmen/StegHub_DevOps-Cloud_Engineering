@@ -23,7 +23,7 @@ ssh -i ../../.ssh/steghub-lemp-project2.pem ubuntu@ec2-98-84-107-0.compute-1.ama
 > Ensure that your EC2 instance is running and that your security group allows SSH access on port 22 before attempting to connect.
 
 
-### Step1 install Nginx and Update the Firewall
+### Step1 install the Nginx Web Server
 The first rule of thumb for any system administrator is to keep the operating system up to date.
 
 > [!TIP]
@@ -116,21 +116,7 @@ sudo mysql_secure_installation
 > [!WARNING]
 > Never use weak passwords in a real environment. In production, always use a strong password and keep credentials in a secure secret store or environment variables.
 
-After securing MySQL, create a database and a dedicated user for the PHP application.
 
-```sql
-CREATE DATABASE `example_database`;
-CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';
-GRANT ALL ON example_database.* TO 'example_user'@'%';
-```
-![alt](images/24.png)
-Now test the connection with the created user:
-
-```bash
-mysql -u example_user -p
-```
-
-![alt](images/13-1.png)
 
 ### Step3 Installing PHP
 
@@ -155,7 +141,8 @@ At this point, the LEMP stack is already installed.
 > [!NOTE]
 > To host multiple services on the same server, we need to configure server blocks in Nginx, which are equivalent to virtual hosts in Apache.
 
-### Step4 Creating a server block for your website using Nginx
+
+### Step 4 -Configuring Nginx to use PHP Processor:
 
 We will create a domain called `projectLEMP`. As you know, the default document root in Nginx points to the default welcome page. We will create a `/var/www/projectLEMP` directory, then assign the required ownership and permissions.
 
@@ -230,7 +217,6 @@ sudo nginx -t
 > [!WARNING]
 > Be careful when removing the default configuration. Make sure your new server block is valid before disabling the default site, otherwise your web server may stop serving requests correctly.
 
-### Step5 Creating a custom landing page
 
 Now create an `index.html` file and test the website.
 A simple way to make the page dynamic is to fetch the public hostname and public IP from the metadata service and write them to the custom index page.
@@ -264,7 +250,8 @@ curl http://ec2-98-84-107-0.compute-1.amazonaws.com:80
 
 ![alt](images/21.png)
 
-### Step6 Enable PHP on the website
+
+### Step 5- Testing PHP with Nginx
 
 To verify that PHP is correctly processed by Nginx through PHP-FPM, create a file named `info.php` and populate it with the following dummy code.
 
@@ -286,7 +273,24 @@ sudo rm -f /var/www/projectLEMP/info.php
 > [!NOTE]
 > The `phpinfo()` page exposes details about your PHP environment. It is useful for testing, but should be removed after verification for security reasons.
 
-### Step7 Create a database table and test PHP-MySQL integration
+
+### Step6 Retrieving data from MYSQL Database with PHP:
+
+After securing MySQL, it is time to create a database and a dedicated user for the PHP application.
+
+```sql
+CREATE DATABASE `example_database`;
+CREATE USER 'example_user'@'%' IDENTIFIED WITH mysql_native_password BY 'PassWord.1';
+GRANT ALL ON example_database.* TO 'example_user'@'%';
+```
+![alt](images/24.png)
+Now test the connection with the created user:
+
+```bash
+mysql -u example_user -p
+```
+
+![alt](images/13-1.png)
 
 Now we will create a sample table for the PHP application.
 
