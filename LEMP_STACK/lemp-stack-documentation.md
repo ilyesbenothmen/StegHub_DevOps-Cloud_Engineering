@@ -342,11 +342,14 @@ try {
 }
 ?>
 ```
-![alt](images/30.jpg)
+
+![alt](images/30.png)
+
 
 Open the file in the browser, and you should see the TODO list rendered from MySQL:
 
-![alt](images/31.jpg)
+
+![alt](images/31.png)
 
 > [!NOTE]
 > This final test confirms that Nginx is serving PHP correctly and that PHP can successfully connect to MySQL and fetch records from the database.
