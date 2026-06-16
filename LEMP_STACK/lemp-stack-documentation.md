@@ -298,6 +298,7 @@ create table example_database.todo_list (
 );
 ```
 ![alt](images/27.png)
+
 Insert sample values into the table:
 
 ```sql
