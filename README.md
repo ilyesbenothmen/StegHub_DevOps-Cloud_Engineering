@@ -48,7 +48,7 @@ This repository includes work involving the following technologies:
 
 
 ### Project 2: LEMP Stack Implementation on AWS
-- Documentation: [LEMP Stack Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/LAMP_STACK/lemp-stack-documentation.md)
+- Documentation: [LEMP Stack Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/LEMP_STACK/lemp-stack-documentation.md)
 - Summary: Deployed a LAMP stack (Linux, Nginx, MySQL, and PHP) on an AWS EC2 instance to create a working environment for hosting dynamic web applications.
 
 ## Notes
