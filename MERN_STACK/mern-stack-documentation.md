@@ -1,5 +1,5 @@
 ## MERN Web Stack Implementation Documentation
-##Overview
+### Overview
 This project documents the implementation of a MERN web stack environment for a Todo application hosted on an Ubuntu-based AWS EC2 instance. 
 
 The MERN stack combines MongoDB, Express.js, React, and Node.js to support full-stack JavaScript development. In this lab, the documented steps focus on preparing the server and backend workspace as the foundation for building and deploying the application,after that we will validate the REST api with postman and develop a React code to build finally a complete application
