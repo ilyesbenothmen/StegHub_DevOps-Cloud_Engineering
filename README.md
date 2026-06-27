@@ -51,6 +51,10 @@ This repository includes work involving the following technologies:
 - Documentation: [LEMP Stack Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/LEMP_STACK/lemp-stack-documentation.md)
 - Summary: Deployed a LAMP stack (Linux, Nginx, MySQL, and PHP) on an AWS EC2 instance to create a working environment for hosting dynamic web applications.
 
+### Project 3: MERN Stack Implementation on AWS
+- Documentation: [MERN Stack Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/LEMP_STACK/mern-stack-documentation.md)
+- Summary: Deployed a MERN stack ( MongoDB,Express.js,React and Nodejs) on an AWS EC2 instance to create a working environment for hosting dynamic web applications.
+
 ## Notes
 
 This repository will continue to grow as more projects are completed during the bootcamp. Each project directory will contain its own documentation, configuration files, and implementation details.
