@@ -406,8 +406,8 @@ npx create-react-app client
 ![alt](./images/48.png)
 
 It is recommended to install concurrently to run more than one command simultanousely from the same  terminal ,  install also nodemon to monitor the server, if there is any change in the server code , nodemon will restart it automatically nad load the new changes.
-```bash
 Our REST API has now been validated.
+```bash
 npm install concurrently --save-dev
 npm install nodemon --save-dev
 ```
