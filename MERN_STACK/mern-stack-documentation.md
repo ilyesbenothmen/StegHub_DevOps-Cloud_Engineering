@@ -10,19 +10,19 @@ The objective of this lab was to prepare a working MERN stack development enviro
 ### Technologies Used
 AWS EC2 instance running Ubuntu 26.04 LTS.
 
-Linux terminal commands for server administration.
+- Linux terminal commands for server administration.
 
-Node.js runtime environment.
+- Node.js runtime environment.
 
-npm package manager.
+- npm package manager.
 
-NodeSource repository for installing the current Node.js release.
+- NodeSource repository for installing the current Node.js release.
 
-MongoDB Atlas as the cloud-hosted database service used by the application.
+- MongoDB Atlas as the cloud-hosted database service used by the application.
 
-React user interface for interacting with the REST API from the frontend.
+- React user interface for interacting with the REST API from the frontend.
 
-REST API communication between the frontend and backend application layers.
+- REST API communication between the frontend and backend application layers.
 
 ### Step0 preparing prerequisites:
 First of all , we are going to spin up an EC2 instance running on AWS.
@@ -392,7 +392,7 @@ Now verify the todo list
 
 ![alt](./images/46.png)
 Our REST API has now been validated.
-**Step 2 Frontend creation**
+### Step 2 Frontend creation ###
 
 we need to scaffold our application , with the command below we are going to generate a skeleton for our web client.
 ```bash
