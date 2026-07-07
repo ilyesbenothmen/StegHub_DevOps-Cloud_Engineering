@@ -55,6 +55,10 @@ This repository includes work involving the following technologies:
 - Documentation: [MERN Stack Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/MERN_STACK/mern-stack-documentation.md)
 - Summary: Deployed a MERN stack ( MongoDB,Express.js,React and Nodejs) on an AWS EC2 instance to create a working environment for hosting dynamic web applications.
 
+### Project 4: MEAN Stack Implementation on AWS
+- Documentation: [MEAN Stack Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/MEAN_STACK/mean-stack-documentation.md)
+- Summary: Deployed a MEAN stack ( MongoDB,Express.js,Angular and Nodejs) on an AWS EC2 instance to create a working environment for hosting dynamic web applications.
+
 ## Notes
 
 This repository will continue to grow as more projects are completed during the bootcamp. Each project directory will contain its own documentation, configuration files, and implementation details.
