@@ -59,6 +59,10 @@ This repository includes work involving the following technologies:
 - Documentation: [MEAN Stack Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/MEAN_STACK/mean-stack-documentation.md)
 - Summary: Deployed a MEAN stack ( MongoDB,Express.js,Angular and Nodejs) on an AWS EC2 instance to create a working environment for hosting dynamic web applications.
 
+### Project 5: Client-Server Implementation on AWS
+- Documentation: [Client-Server Mysql Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/MYSQLDB/mysqldb.md)
+- Summary: Deployed a MYSQL Server on an AWS EC2 instance and connect to it remotely to manipulate sql queries.
+
 ## Notes
 
 This repository will continue to grow as more projects are completed during the bootcamp. Each project directory will contain its own documentation, configuration files, and implementation details.
