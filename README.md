@@ -63,6 +63,10 @@ This repository includes work involving the following technologies:
 - Documentation: [Client-Server Mysql Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/MYSQLDB/mysqldb.md)
 - Summary: Deployed a MYSQL Server on an AWS EC2 instance and connect to it remotely to manipulate sql queries.
 
+### Project 6: Web Solution with wordpress
+- Documentation: [WordPress Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/web_wordpress/web_wordpress.md)
+- Summary: Deployed WordPress application Amazon AWS RHEL servers
+
 ## Notes
 
 This repository will continue to grow as more projects are completed during the bootcamp. Each project directory will contain its own documentation, configuration files, and implementation details.
