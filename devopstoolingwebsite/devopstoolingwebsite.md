@@ -72,6 +72,8 @@ sudo mkfs.xfs /dev/vgdata/lv-opt
 ```
 
 ![alt](images/12.png)
+
+
 To create and populate the log partition (/var/log), we will first create a temporary directory to store the existing log files before moving them to the new filesystem.
 
 ![alt](images/13.png)

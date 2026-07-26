@@ -67,6 +67,10 @@ This repository includes work involving the following technologies:
 - Documentation: [WordPress Project](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/web_wordpress/web_wordpress.md)
 - Summary: Deployed WordPress application Amazon AWS RHEL servers
 
+### Project 7: Devops Tooling Website Solution
+- Documentation: [DevopstoolingWebsite](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/devopstoolingwebsite/devopstoolingwebsite.md)
+- Summary: Deployed Devops Tooling Website using a 3-Tier architecture on EC2 instances , the web service is highly available using NFS shares.
+
 ## Notes
 
 This repository will continue to grow as more projects are completed during the bootcamp. Each project directory will contain its own documentation, configuration files, and implementation details.
