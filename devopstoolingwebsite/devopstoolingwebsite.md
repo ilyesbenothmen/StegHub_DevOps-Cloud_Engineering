@@ -33,6 +33,8 @@ Connect to the NFS server and use the lsblk command to verify the attached disks
 ![alt](images/5.png)
 Using fdisk command partition nvme1n1 nvme2n1 and nvme3n1 with a primary partition for each disk
 ![alt](images/6.png)
+
+
 For each newly created partition, set the partition type to Linux LVM (8e), then write the partition table and exit by typing w.
 ![alt](images/7.png)
 We are using LVM2 to manage storage in the Linux system , which give us scalability and reliability.
@@ -82,6 +84,8 @@ Mount the remaining LVs to their mountpoints ( /mnt/logs , /mnt/opt and /mnt/app
 
 
 ![alt](images/15.png)
+
+
 The filesystem preparation is now complete. We will proceed with the package installation phase.
 >[!TIP]
 >Before starting any major package installation, it is a best practice to check for available updates and ensure that the system is up to date.
@@ -138,6 +142,8 @@ Chek which ports are used for nfs service with rpcinfo or netstat
 sudo rpcinfo -p |grep nfs 
 ```
 ![alt](images/23.png)
+
+
 Add inbound security rules to allow ports 2049 and 111 for both TCP and UDP protocols, as shown below.
 ![alt](images/24.png)
 
@@ -168,10 +174,6 @@ We will now secure our MySQL installation by running the mysql_secure_installati
 ![alt](images/31.png)
 Connect to the local MySQL instance. Create the tooling database, then create a user named webaccess that is allowed to connect from the 172.31.0.0 network and grant it all privileges.
 ![alt](images/32.png)
-
->[!TIP]
->
-
 
 ### Step 3 Prepare the Web Servers
 To serve the share from nfs server we need to install nfs-utils andnfs4-acl-tools
@@ -338,7 +340,7 @@ the following screen is displayed
 ![alt](images/67.png)
 as admin let us create a non admin user named test/test123
 ![alt](images/68.png)
-connect with that user
+connect with test user
 ![alt](images/69.png)
 
 ### Error encountered:
