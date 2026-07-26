@@ -130,6 +130,8 @@ To make the NFS shares available, apply the configuration changes by running the
 sudo exportfs -arv
 ```
 ![alt](images/22.png)
+the exports file should be like below , no space between IP and flags
+![alt](images/46.png)
 
 Chek which ports are used for nfs service with rpcinfo or netstat
 ```bash
@@ -171,28 +173,196 @@ Connect to the local MySQL instance. Create the tooling database, then create a 
 >
 
 
+### Step 3 Prepare the Web Servers
+To serve the share from nfs server we need to install nfs-utils andnfs4-acl-tools
+```bash
+yum install nfs-utils ,nfs4-acl-tools
+```
+![alt](images/33.png)
+Create a mount point and use the mount command to verify that the NFS share is reachable by mounting it temporarily.
+```bash
+ sudo mkdir /var/wwww
+ sudo mount -t nfs -o rw,nosuid 172.31.25.53
+```
+
+![alt](images/35.png)
+Make the montage peristant by editing the /etc/fstab
+
+![alt](images/36.png)
+
+Now install httpd with
+```bash
+sudo yum install httpd -y
+```
+![alt](images/37.png)
+
+Installs the EPEL (Extra Packages for Enterprise Linux) repository, which provides additional packages not included in RHEL.
+```bash
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+```
+
+![alt](images/38.png)
+
+Installs dnf-utils, a collection of utilities that extend DNF functionality (e.g., config-manager).
+then Installs the Remi repository, which provides newer versions of PHP and related packages.
+
+```bash
+sudo dnf install dnf-utils
+sudo dnf install http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+
+```
+![alt](images/39.png)
 
 
+Enables the PHP 7.4 module stream from the Remi repository.
+```bash
+sudo dnf module enable php:remi-7.4
 
+```
+
+![alt](images/40.png)
+
+Resets the PHP module to its default state, removing any previously enabled PHP stream.
+```bash
+sudo dnf module reset php
+```
+![alt](images/41.png)
+
+Installs PHP 7.4 and commonly used extensions: OPcache (performance), GD (image processing), cURL (HTTP requests), and MySQL Native Driver (MySQL connectivity).
+```bash
+sudo dnf install php php-opcache php-gd php-curl php-mysqlnd
+```
+
+![alt](images/42.png)
+
+Starts the PHP FastCGI Process Manager (PHP-FPM) service immediately.
+Configures PHP-FPM to start automatically at system boot.
+```bash
+sudo systemctl start php-fpm
+sudo systemctl enable php-fpm
+sudo setsebool -P httpd_execmem 1
+```
+Permanently allows Apache (httpd) to execute writable memory under SELinux. This is sometimes required by certain PHP extensions or applications but should only be enabled if necessary, as it relaxes SELinux security.
+
+![alt](images/43.png)
+
+Mount the filesystems on /mnt/{apps,opt,logs} and configure them to be automatically mounted at boot time.
+
+![alt](images/44.png)
+Verify that the share has read/write permissions and that clients can successfully write to it.
+![alt](images/45.png)
+
+For users familiar with virtual machine cloning, AWS offers a similar mechanism using Amazon Machine Images (AMIs). We will now create the two remaining EC2 instances from the AMI. It is similar to capturing the configuration and state of a running instance, then using that image later to launch new instances.
+![alt](images/47.png)
+Select the image and press on Launch instance from AMI to create the remaining instances, and pay attention to use the same network and Availability zone (AZ) for ease of use and to avoid trouble for the share we have prepared .
+![alt](images/48.png)
+After creating webservers we need to create a fork of tooling website on github.
+
+
+![alt](images/50.png)
+Install git command with 
+```bash
+sudo dnf install git
+```
+![alt](images/51.png)
+Now, I need to create a new SSH key in my GitHub account for one of the web servers, for example steghub-webserver3. The same procedure applies to webserver1 or webserver2, but only one server is required.
+![alt](images/52.png)
+Generate keys with an empty passphrase
+
+Displays the generated public key that must be copied to GitHub.
+
+Verifies that SSH authentication with GitHub is working correctly.
 > [!NOTE]
-> There is a reliable way to get the public IP address from the EC2 instance metadata service.
+>-T option of ssh disables remote command execution; only tests authentication.
+```bash
+ssh-keygen -t ed25519
+eval "$(ssh-agent -s)"
+cat ~/.ssh/id_ed25519.pub
+ssh -T  git@github.com
+git clone git@github.com:ilyesbenothmen/tooling.git
+```
+![alt](images/53.png)
+
+![alt](images/54.png)
+
+
+![alt](images/55.png)
+Add an inbound security group rule to allow HTTP traffic on port 80 for each web server, as shown below.
+
+![alt](images/56.png)
+
+
+![alt](images/57.png)
+
+Connect again to mysql database server :
+Create a MySQL user account named myuser that is allowed to connect from any IP address (%) and grant it administrative privileges.
+```sql
+CREATE USER 'myuser'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'myuser'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+```
+![alt](images/58.png)
+
+install a mysql client like mariadb on a webserver with
+```bash
+sudo yum install mariadb
+```
+![alt](images/59.png)
+
+Access the web server and verify that the graphical user interface (GUI) is displayed correctly.
+
+![alt](images/60.png)
+
+
+Run the tooling-db.sql script on the remote mysql server with:
+```sql
+
+mysql -u myuser -ppassword -h 172.31.16.58 -D tooling < tooling-db.sql
+
+```
 
 
 
 
+![alt](images/64.png)
+Create a database user named myuser with administrative privileges on the tooling database. This user is intended to manage database operations within tooling and is not a generic user account.
+```sql
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `user_type`, `status`)
+VALUES (1, 'myuser', '5f4dcc3b5aa765d61d8327deb882cf99', 'user@mail.com', 'admin', 1);
 
+```
+![alt](images/65.png)
+Now login to any of our webservers and use admin/admin
+![alt](images/66.png)
+the following screen is displayed
+![alt](images/67.png)
+as admin let us create a non admin user named test/test123
+![alt](images/68.png)
+connect with that user
+![alt](images/69.png)
 
-
-
-
-
-
-
-
-
-
-
-
-
+### Error encountered:
+*  RHEL: 8.10 
+*  PHP: 7.2.24 (very old) 
+*  MySQL Server: 8.4.10 (Ubuntu 26.04) 
+*  Result: Authentication fails because the client is too old for MySQL 8.4.
+*  Solution : Upgrade PHP to the version 8.2
+```bash
+sudo dnf module list php
+sudo dnf module reset php
+sudo dnf module enable php:8.2
+sudo dnf distro-sync
+sudo dnf install php php-cli php-common php-mysqlnd php-fpm
+sudo systemctl restart httpd
+sudo systemctl restart php-fpm
+```
+![alt](images/err0.png)
+![alt](images/err1.png)
+![alt](images/err3.png)
+![alt](images/err4.png)
+![alt](images/err5.png)
 ### Conclusion:
 
+During this lab, we implemented an enterprise-like application deployment, covering the complete infrastructure setup and configuration process. Each step was thoroughly documented and illustrated, including the implementation details on both RHEL and Ubuntu platforms. AWS was used as the cloud infrastructure provider to host and manage the required resources.
+
+This lab provided hands-on experience with deploying a multi-tier application architecture, configuring Linux-based systems, managing cloud resources, and applying real-world system administration practices.
