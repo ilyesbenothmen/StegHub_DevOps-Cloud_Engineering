@@ -20,80 +20,120 @@ The following diagram illustrates the architecture we are going to implement, wi
 
 ### Step0 preparing prerequisites:
 
+For the purpose of this lab, we will use the following components:
+1. two RHEL8 Web servers
+2. One Mysql DB Server running on Ubuntu
+3. One RHEL8 NFS Server
+
+![alt](images/prerequisite.png)
+
+### Step1 Configuring Apache As a LoadBalancer:
+As a first step, we will deploy an Ubuntu Server instance that will serve as the software-based load balancer.
 
 ![alt](images/0.png)
+![alt](images/1.png)
+
+Next, update the local package index(Repository metadata) using the following command:
+```bash
+sudo apt update
+```
 
 ![alt](images/2.png)
 
 
-![alt](images/2-1.png)
-
-
-### Step1 install Apache and Update the Firewall
-
->[!TIP]
->
-
 ![alt](images/3.png)
-
-
+The next step consists of installing the Apache2 web server, its required dependencies, and the libxml2-dev development package by executing the following commands:
+```bash
+sudo apt install apache2 -y
+sudo apt-get install libxml2-dev
+```
 ![alt](images/4.png)
 
-
+After that ,We need to enable the following modules :
+```bash
+sudo a2enmod rewrite
+sudo a2enmod proxy
+sudo a2enmod proxy_balancer
+sudo a2enmod proxy_http
+sudo a2enmod headers
+sudo a2enmod lbmethod_bytraffic
+sudo systemctl restart apache2
+```
 ![alt](images/5.png)
-
 ![alt](images/6.png)
-
+Make sure that apache2 is up and running
+```bash
+sudo systemctl status apache2
+```
 ![alt](images/7.png)
-> [!NOTE]
->
+
+The next step focuses on the core load balancer configuration, which is managed through the main Apache virtual host configuration file: /etc/apache2/sites-available/000-default.conf.
+```bash
+<Proxy "balancer://mycluster">
+BalancerMember http://172.31.18.195:80 \
+loadfactor=5 timeout=1
+BalancerMember http://172.31.28.168:80 \
+loadfactor=5 timeout=1
+ProxySet lbmethod=bytraffic
+# ProxySet lbmethod=byrequests
+</Proxy>
+
+ProxyPreserveHost On
+ProxyPass / balancer://mycluster/
+ProxyPassReverse / balancer://mycluster/
+</VirtualHost>
+```
+
+![alt](images/8.png)
+
+
+Initially, the two web servers use a shared /var/log/httpd directory hosted on the NFS server. To ensure server independence, we will reconfigure each web server to use its own local log directory."
+```bash
+sudo systemctl stop httpd
+sudo umount /var/log/httpd
+```
+
 ![alt](images/9.png)
 
-### Step2 Installing Mysql
 
+
+The next step is to access the web application through the public IP address of each web server and analyze the corresponding /var/log/httpd/access_log entries to validate request handling.
+
+```bash
+tail -f /var/log/httpd/access_log
+```
 ![alt](images/10.png)
-
-
-
+This is the Output of the first server
 ![alt](images/11.png)
+This is the Output of the second web server
+![alt](images/12.png)
 
+The main observation is that the generated access log entries are evenly distributed between the two web servers. This distribution confirms the expected behavior of the load balancer and matches the configured loadfactor=5 parameter.
+
+### Step2 Configuring Local DNS Names Resolution
+In a real-world environment, remembering and managing individual IP addresses for every web server can be tedious and error-prone. This is where the Domain Name System (DNS) comes into play, providing a mechanism to translate human-readable domain names into IP addresses.
+
+For this lab environment, and to keep the configuration simple, we will use the /etc/hosts file as a static local name resolution mechanism instead of deploying a dedicated DNS server. Add the required hostname-to-IP address mappings as follows:
+```bash
+172.31.18.195   web1 
+172.31.28.168   web2
+```
 ![alt](images/13.png)
 
+And change 000-default.conf as bellow:
 
+![alt](images/14.png)
 
-### Step3 Installing PHP
-
-
+To validate hostname resolution and web server accessibility, execute the following curl commands. The expected output should confirm that both web servers are reachable and responding correctly:
+```bash
+curl http://web1/
+curl http://web2/
+```
 
 ![alt](images/15.png)
-
-
->[!Note]
->To host multiple services on the same server, we need to configure virtual hosts (vhosts).
-
-### Step4 Creating a virtual host for your website using Apache
-
-
-![alt](images/19.png)
-
-
-
 
 ![alt](images/16.png)
 
 
-
-![alt](images/20.png)
-
-
-![alt](images/17.png)
-
-### Step 5 Enable PHP on the website:
-viour , you'll need to edit /etc/apache2/mods-enabled/dir.conf 
-![alt](images/21.png)
-
-
-![alt](images/18.png)
-
 ### Conclusion:
-
+The Apache Server **mod_proxy_balancer** module delivers essential load-balancing capabilities, such as session persistence (sticky sessions) and multiple traffic distribution algorithms similar to those available in commercial load-balancing products. Adopting open-source technologies with the appropriate expertise can enable organizations to build enterprise-level Information Systems while optimizing investment costs.
