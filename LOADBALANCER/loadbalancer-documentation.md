@@ -6,14 +6,15 @@ A load balancer is either a dedicated hardware appliance or a software solution 
 
 There are two common approaches to scaling an infrastructure:
 
-Vertical scaling (Scaling Up): Increasing the capacity of an existing server by adding resources such as CPU cores, memory, or storage.
-Horizontal scaling (Scaling Out): Increasing the application's capacity by deploying additional server instances and distributing the workload among them.
+1. **Vertical scaling (Scaling Up)**: Increasing the capacity of an existing server by adding resources such as CPU cores, memory, or storage.
 
-A load balancer plays a key role in horizontal scaling by efficiently routing requests according to a configurable balancing strategy. Common algorithms include Round Robin, Least Connections, Weighted Distribution, and Traffic-Based balancing. The choice of algorithm depends on the application's requirements, server capabilities, and expected workload.
+2. **Horizontal scaling (Scaling Out)**: Increasing the application's capacity by deploying additional server instances and distributing the workload among them.
 
-In this lab, we will implement a software load balancer using Apache HTTP Server (mod_proxy_balancer). The load balancer will be deployed on an Ubuntu EC2 instance hosted in AWS and configured to distribute HTTP requests across two backend web servers located within the same Virtual Private Cloud (VPC). This architecture demonstrates a typical enterprise deployment pattern that improves both availability and scalability while maintaining a single entry point for client requests.s.
+A load balancer plays a key role in horizontal scaling by efficiently routing requests according to a configurable balancing strategy. Common algorithms include : **Round Robin**, **Least Connections**, **Weighted Distribution**, and **Traffic-Based balancing**. The choice of algorithm depends on the application's requirements, server capabilities, and expected workload.
 
+In this lab, we will implement a software load balancer using Apache HTTP Server (mod_proxy_balancer). The load balancer will be deployed on an Ubuntu EC2 instance hosted in AWS and configured to distribute HTTP requests across two backend web servers located within the same Virtual Private Cloud (VPC). This architecture demonstrates a typical enterprise deployment pattern that improves both availability and scalability while maintaining a single entry point for client requests.
 
+The following diagram illustrates the architecture we are going to implement, with a particular focus on the load balancer layer(highlighted with a red rectangle). The other layers of this architecture were already implemented in the previous labs.
 
 ![alt](images/diagram.png)
 
