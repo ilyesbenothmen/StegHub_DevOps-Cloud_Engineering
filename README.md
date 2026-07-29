@@ -74,6 +74,6 @@ This repository includes work involving the following technologies:
 ### Project 8: Load Balancer Solution With Apache
 - Documentation: [LoadBalancerApache](https://github.com/ilyesbenothmen/StegHub_DevOps-Cloud_Engineering/blob/main/LOADBALANCER/loadbalancer-documentation.md)
 - Summary: Deployed Apache Load Balancer  on EC2 instance , the web service is in front of a resilient web service.
-## Notes
+## Notes 
 
 This repository will continue to grow as more projects are completed during the bootcamp. Each project directory will contain its own documentation, configuration files, and implementation details.
