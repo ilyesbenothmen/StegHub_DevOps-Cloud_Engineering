@@ -1,0 +1,1 @@
+https://pkg.jenkins.io/debian-stable/
