@@ -25,7 +25,7 @@ Ensure that the newly created EC2 instance is launched in the same Availability 
 
 In addition, configure inbound security group rules to allow HTTP and HTTPS traffic on ports 80 and 443.
 
-[!NOTE]
+>[!NOTE]
 >These two considerations help prevent connectivity and communication issues.
 
 ![alt](images/3.png)
