@@ -128,34 +128,188 @@ At this stage we are working locally on our local repository on the newly create
 
 6. Winthin the inventory folder , create an inventory file for each environment :  dev ,prod,uat and staging.
 
-![alt](images/18.png)
+![alt](images/19.png)
 
 
 >[!Note]
 >
-fffffffffffffffffffffffffffffffffffffffff
 
 
-![alt](images/19.png)
+### Step 4 - Setup an Ansible Inventory:
+
+
+To automate tasks with Ansible, the control node must be able to reach each managed node over SSH, ideally using key-based, passwordless authentication. Two common patterns are:
+
+1. Single Ansible key pair: Generate an SSH key pair on the Ansible control node, and add the public key to the ~/.ssh/authorized_keys file of each managed host. The private key stays on the control node and can be loaded into ssh-agent to avoid repeated passphrase prompts.
+
+2. Multiple SSH keys: When different managed nodes use different SSH key pairs (for example, per environment or per cloud provider), store the corresponding private keys on the control node, load them into ssh-agent, and reference them in your Ansible inventory with ansible_ssh_private_key_file as needed.
 
 
 
 
+On the WSL terminal, start an SSH agent and load the private key for the jenkins-ansible host:
+```bash
 
-![alt](images/16.png)
+eval `ssh-agent -s`
+ssh-add steghub-jenkins-ansible.pem
+ssh-add -l
+```
 
+The first command starts ssh-agent in the current shell, the second adds your private key to the agent, and the third lists the keys currently loaded to confirm that the key was added successfully.
 
 
 ![alt](images/20.png)
 
+Now ssh into the Jenkin-ansible jumphost with 
 
-![alt](images/17.png)
+```bash
 
-### Step 5 Enable PHP on the website:
+ssh -A ubuntu@34.198.0.253
+
+```
+
+
 ![alt](images/21.png)
 
 
-![alt](images/18.png)
+Update your inventory file with this snippet of code :
+
+```vim
+
+[nfs]
+172.31.25.53  ansible_ssh_user=ec2-user
+
+[webservers]
+172.31.18.195 ansible_ssh_user=ec2-user
+172.31.28.168 ansible_ssh_user=ec2-user
+
+[db]
+172.31.16.58 ansible_ssh_user=ubuntu
+
+[lb]
+172.31.24.59  ansible_ssh_user=ubuntu
+
+```
+
+![alt](images/22.png)
+
+Checkout and update the inventory to the main remote repository.
+
+![alt](images/23.png)
+
+### Step 5 - Create a Common Playbook
+
+Replace the content of playbooks/common.yml with the following:
+```vim
+- name: update web, nfs, and db servers
+  hosts: nfs_server, web_servers, db_server
+  become: yes
+  tasks:
+    - name: ensure wireshark is at the latest version
+      yum:
+        name: wireshark
+        state: latest
+
+- name: update LB server
+  hosts: lb_server
+  become: yes
+  tasks:
+    - name: Update apt repo
+      apt:
+        update_cache: yes
+
+    - name: ensure wireshark is at the latest version
+      apt:
+        name: wireshark
+        state: latest
+```
+
+![alt](images/24.png)
+Commit change to local branch feature/prj11-ansible
+
+![alt](images/25.png)
+Push changes to remote repository
+
+![alt](images/26.png)
+
+
+![alt](images/27.png)
+
+Apply for a PR (Pull Request) ,since we push to the remote prj11-ansible. The idea that the developer should ask the integrator/reviewer to merge its feature development into the remote main branch.
+
+![alt](images/28.png)
+Here the integrator check that there is no conflict ,and will merge pull request
+![alt](images/29.png)
+and confirm that merge
+![alt](images/30.png)
+
+At this stage the feature/prj11-ansible can be safely deleted
+![alt](images/31.png)
+
+At this point, the Jenkins pipeline comes into play: as soon as the code is pushed to the main branch, the Jenkins job is automatically triggered.
+Once your code changes appear in master branch - Jenkins will do its job and save all the files (build artifacts) to
+
+/var/lib/jenkins/jobs/ansible/builds/<build_number>/archive/.
+
+![alt](images/32.png)
+
+
+### Step 7 - RUN FIRST ANSIBLE TEST
+
+Now, it is time to execute ansible-playbook command and verify if your playbook actually works:
+```bash
+ansible-playbook -i inventory/dev.yml playbooks/common.yml
+```
+In my environment it didn't work as expected!
+It looks like a problem of python version. 
+![alt](images/33.png)
+
+I have fixed the code with the following :
+```yaml
+---
+- name: update web, nfs
+  hosts: webservers, nfs
+  remote_user: ec2-user
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.9
+  become_user: root
+  tasks:
+    - name: ensure wireshark is at the latest version
+      ansible.builtin.command: dnf install -y wireshark
+      register: dnf_output
+      changed_when: "'Nothing to do' not in dnf_output.stdout"
+
+- name: update LB server
+  hosts: lb ,db
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  tasks:
+    - name: Update apt repo
+      apt:
+        update_cache: yes
+
+    - name: ensure wireshark is at the latest version
+      apt:
+        name: wireshark
+        state: latest
+
+```
+The second execution of the playbook completed successfully.
+
+![alt](images/34.png)
+
+
+![alt](images/35.png)
+Let’s verify that Wireshark is installed on every node.
+```bash
+whick wireshark
+```
+![alt](images/36.png)
+![alt](images/37.png)
+![alt](images/38.png)
 
 ### Conclusion:
 
+In this lab, we automated package deployment across the server nodes and laid the foundation on which further automation and CI will be built.
