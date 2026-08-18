@@ -11,21 +11,36 @@ The architecture below depicts the target architecture that we will implement.
 This lab consists of two parts:
 1. Install and configure Ansible client to act as a Jump Server/Bastion Host
 2. Create a simple ansible playbook to automate servers configuration
-### Step0 preparing prerequisites:
+### Step 1 - install and Configure Ansible on EC2 Instance:
 
+1. In previous labs, we used an AWS instance named steghub-jenkins. For the purpose of this lab, we will rename this instance to steghub-jenkins-ansible and configure it to act as our Jump Server (Bastion Host).
+
+In the context of AWS, instance names are typically managed through Tags. Therefore, we will locate the Name tag associated with the instance in the AWS Management Console and update it accordingly.
+
+![alt](images/1.png)
+
+2. In the Github account we created a new repository and named it **ansible-config-mgt**.
 
 ![alt](images/2.png)
 
-
-![alt](images/2-1.png)
-
-### Step1 install Apache and Update the Firewall
-
+3. Install **Ansible** : 
+[]  Install with pip
+[x] Install with apt manager
+In this case type the following system commands :
+```bash
+sudo apt update
+sudo apt install ansible
+```
+Check that ansible is installed by running :
+```bash
+sudo ansible --version
+```
+![alt](images/3.png)
 
 >[!TIP]
 >
 
-![alt](images/3.png)
+
 
 ![alt](images/4.png)
 
