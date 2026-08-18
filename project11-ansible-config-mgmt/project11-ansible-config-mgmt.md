@@ -1,6 +1,16 @@
 ## Ansible Configuration Management (Automate Project 7 to 10)
 ### Introduction:
+When designing infrastructure for a real-world enterprise environment, it is common practice to deploy what is known as a jump host (or bastion host). This server acts as a controlled entry point for administrative access to the internal infrastructure.
 
+By centralizing external access through a dedicated, hardened system, we reduce the overall attack surface and limit the exposure of internal systems to potential threats.
+
+The architecture below depicts the target architecture that we will implement.
+ 
+![alt](images/architecture.png)
+
+This lab consists of two parts:
+1. Install and configure Ansible client to act as a Jump Server/Bastion Host
+2. Create a simple ansible playbook to automate servers configuration
 ### Step0 preparing prerequisites:
 
 
