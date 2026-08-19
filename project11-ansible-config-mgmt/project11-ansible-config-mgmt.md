@@ -24,8 +24,9 @@ In the context of AWS, instance names are typically managed through Tags. Theref
 ![alt](images/2.png)
 
 3. Install **Ansible** : 
-[]  Install with pip
-[x] Install with apt manager
+
+- [ ]  Install with pip
+- [x] Install with apt manager
 In this case type the following system commands :
 ```bash
 sudo apt update
@@ -54,8 +55,9 @@ sudo ansible --version
 ![alt](images/7.png)
 - Configure a Post-build action that archive all files(**).
 ![alt](images/8.png)
-> [!NOTE] pay attention to use (**) as Files to Archive not (*)
-> 
+> [!NOTE]
+> pay attention to use (**) as Files to Archive not (*)
+ 
 You will see the ansible item checked in green after the first build integration.
 ![alt](images/9.png)
 
@@ -101,6 +103,7 @@ git clone git@github.com:ilyesbenothmen/ansible-config-mgt.git
 As shown in the image below, we are connected to the jumphost shell through the integrated Terminal.
 >[!Note]
 >the README.md is from the remote repository on Github
+
 ![alt](images/15.png)
 
 The bottom of the following image indicates that we are successfully connected to the jumphost over SSH
@@ -129,10 +132,6 @@ At this stage we are working locally on our local repository on the newly create
 6. Winthin the inventory folder , create an inventory file for each environment :  dev ,prod,uat and staging.
 
 ![alt](images/19.png)
-
-
->[!Note]
->
 
 
 ### Step 4 - Setup an Ansible Inventory:
