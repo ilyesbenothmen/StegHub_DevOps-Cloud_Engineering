@@ -27,6 +27,7 @@ In the context of AWS, instance names are typically managed through Tags. Theref
 
 - [ ]  Install with pip
 - [x] Install with apt manager
+
 In this case type the following system commands :
 ```bash
 sudo apt update
