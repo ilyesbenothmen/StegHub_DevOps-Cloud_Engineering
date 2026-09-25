@@ -182,3 +182,136 @@ Finally, create a Pull Request to merge the roles-feature branch into the main b
 
 
 ![alt](images/14.png)
+
+
+#### Load Balancer roles
+We want to be able to choose which Load Balancer to use, Nginx or Apache, so we need to have two roles respectively:
+
+1. Nginx
+2. Apache
+
+
+```yaml
+ansible-galaxy role install geerlingguy.apache
+mv roles/geerlingguy.apache roles/apache
+ansible-galaxy role install geerlingguy.nginx
+mv roles/geerlingguy.nginx roles/nginx
+```
+![alt](images/15.png)
+
+Inside defaults/main.yml define flags to ensure activation and deactivation of the role.
+
+For apache:
+```yml
+enable_apache_lb: false
+load_balancer_is_required: false
+```
+![alt](images/16.png)
+
+For nginx:
+```yml
+enable_nginx_lb: false
+load_balancer_is_required: false
+```
+![alt](images/17.png)
+
+We define the conditions for which we activate a role rather than the other in static-assignments/loadbalancers.yml
+```yml
+- hosts: lb
+  roles:
+    - { role: nginx, when: enable_nginx_lb and load_balancer_is_required }
+    - { role: apache, when: enable_apache_lb and load_balancer_is_required }
+```
+
+![alt](images/18.png)
+
+Update playbooks/site.yml to import the loadbalancer role with :
+
+```yml
+     - name: Loadbalancers assignment
+       hosts: lb
+         - import_playbook: ../static-assignments/loadbalancers.yml
+        when: load_balancer_is_required 
+```
+
+![alt](images/19.png)
+
+Now we rebase our code with main branch  :
+```bash
+git switch  main
+git fetch origin
+git pull --ff-only origin main
+```
+![alt](images/20.png)
+
+First we test the apache role by setting following flags in env-vars/uat.yml
+```yml
+enable_nginx_lb: false
+enable_apache_lb: true
+load_balancer_is_required: true
+```
+![alt](images/21.png)
+
+The playbooks/site.yml looks like the following:
+
+![alt](images/22.png)
+
+Now we launch the playbooks/site.yml against UAT environment and we didn't started the web server fot the moment.
+```bash
+ansible-playbook -i inventory/uat.yml playbooks/site.yml
+```
+
+![alt](images/23.png)
+
+![alt](images/24.png)
+
+Let us list the available virtual host with :
+```bash
+apachectl -S
+```
+We figure out the existance of 3 virtual hosts which will make confusion
+![alt](images/25.png)
+
+Keep only the loadbalancer virtual host with the following commands:
+```bash
+sudo systemctl stop apache2
+sudo a2dissite 000-default.conf
+sudo a2dissite vhosts.conf
+ls -la /etc/apache2/sites-enabled
+sudo systemctl start apache2
+sudo apache2ctl -S
+```
+
+![alt](images/26.png)
+
+We start the two web servers behind the apache LB and we test the loadbalancing with :
+
+```bash
+curl http://172.31.72.41/index.php
+```
+
+![alt](images/27.png)
+
+we test the nginx role by setting following flags in env-vars/uat.yml
+```yml
+enable_nginx_lb: true
+enable_apache_lb: false
+load_balancer_is_required: true
+```
+
+![alt](images/28.png)
+
+We deploy our nginx lb by running:
+
+```bash
+ansible-playbook -i inventory/uat.yml playbooks/site.yml
+```
+![alt](images/29.png)
+
+![alt](images/30.png)
+
+![alt](images/31.png)
+
+### Conclusion:
+
+In this lab, you configured dynamic inventory assignment and used Ansible roles to deploy Apache web servers, an NGINX load balancer, and a MySQL database server. Organizing each service as a role keeps the automation modular and easier to maintain.
