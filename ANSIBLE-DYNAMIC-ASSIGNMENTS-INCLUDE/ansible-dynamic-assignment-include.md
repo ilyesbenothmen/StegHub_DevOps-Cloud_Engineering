@@ -175,24 +175,23 @@ We get the following results:
 
 ![alt](images/116.png)
 
-We notice that the env-vars.yml playbook load the exact parameters we intended.
+We can see that the env-vars.yml playbook now loads the correct environment-specific variables.
 
 Update playbooks/site.yml with dynamic assignment as bellow:
 ```yml
 ---
-- hosts: all
-- name: Include dynamic variables 
-  tasks:
-  import_playbook: ../static-assignments/common.yml 
-  include: ../dynamic-assignments/env-vars.yml
+- name: Include dynamic variables
+  import_playbook: ../dynamic-assignments/env-vars.yml
   tags:
     - always
 
--  hosts: webservers
-- name: Webserver assignment
+- name: Import common configuration
+  import_playbook: ../static-assignments/common.yml
+
+- name: Configure webservers
   import_playbook: ../static-assignments/webservers.yml
 ```
-![alt](images/2.png)
+
 For now we have build the essential part that make our project load dynamically depending our environnment: dev,stage,uat and prod.
 
 
