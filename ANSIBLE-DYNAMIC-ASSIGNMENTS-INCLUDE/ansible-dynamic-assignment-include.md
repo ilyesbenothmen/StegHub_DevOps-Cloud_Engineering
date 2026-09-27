@@ -60,6 +60,123 @@ insert the following code in env-vars.yml to load dynamically differents environ
         - always
 ```
 ![alt](images/1.png)
+For testing purposes, let’s populate env-vars/dev.yml and env-vars/uat.yml with the following values:
+
+```yml
+param1: 1000
+param2: uat-env
+param3: 10.0
+```
+```yml
+param1: 1
+param2: dev-env
+param3: 1.0
+```
+To test the playbook let us add 2 other tasks to :
+- Show selected inventory and loaded file
+- Show selected environment settings
+
+The complete playbook is shown below:
+```yml
+---
+- name: collate variables from env specific file, if it exists
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: looping through list of available files
+      include_vars: "{{ item }}"
+      with_first_found:
+        - files:
+            - dev.yml
+            - stage.yml
+            - prod.yml
+            - uat.yml
+          paths:
+            - "{{ playbook_dir }}/../env-vars"
+      register: env_vars_result      
+      tags:
+        - always
+
+    - name: Show selected inventory and loaded file
+      ansible.builtin.debug:
+        msg: >-
+          Host={{ inventory_hostname }}
+          Inventory={{ inventory_file | basename }}
+          Loaded={{ env_vars_result.results[0].ansible_included_var_files }}
+      tags:
+        - always
+
+    - name: Show selected environment settings
+      ansible.builtin.debug:
+        msg: >-
+          parameter1={{ param1 }}
+          parameter2={{ param2 }}
+          parameter3={{ param3 }}
+      tags:
+        - always
+
+```
+
+![alt](images/113.png)
+
+```bash
+#verify that the syntax is OK
+ansible-playbook -i inventory/dev.yml dynamic-assignments/env-vars.yml --syntax-check
+```
+Then run the playbook 
+![alt](images/114.png)
+
+The result was as expected: although the selected inventory was uat.yml, the playbook loaded the variables from dev.yml because **with_first_found** selected the first existing file in the list.
+
+Now, let’s fix the issue by replacing the with_first_found logic with the following playbook:
+
+```yml
+---
+- name: Load variables matching the selected inventory
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Validate the inventory filename
+      ansible.builtin.assert:
+        that:
+          - (inventory_file | basename) in ['dev.yml', 'stage.yml', 'uat.yml', 'prod.yml']
+        fail_msg: "Select inventory/dev.yml, stage.yml, uat.yml, or prod.yml."
+
+    - name: Load variables for this host's inventory
+      ansible.builtin.include_vars:
+        file: "{{ playbook_dir }}/../env-vars/{{ inventory_file | basename }}"
+      register: env_vars_result
+
+    - name: Show the selected inventory and loaded file
+      ansible.builtin.debug:
+        msg: >-
+          Host={{ inventory_hostname }}
+          Inventory={{ inventory_file | basename }}
+          Loaded={{ env_vars_result.ansible_included_var_files }}
+
+    - name: Show selected environment settings
+      ansible.builtin.debug:
+        msg: >-
+          Inventory={{ inventory_file | basename }}
+          parameter1={{ param1 }}
+          parameter2={{ param2 }}
+          parameter3={{ param3 }}
+
+```
+Let us run the following commands:
+```bash
+ansible-playbook -i inventory/dev.yml dynamic-assignments/env-vars.yml 
+ansible-playbook -i inventory/uat.yml dynamic-assignments/env-vars.yml 
+```
+We get the following results:
+
+![alt](images/115.png)
+
+![alt](images/116.png)
+
+We notice that the env-vars.yml playbook load the exact parameters we intended.
+
 Update playbooks/site.yml with dynamic assignment as bellow:
 ```yml
 ---
@@ -123,11 +240,11 @@ Before integrating the role into production infrastructure, validate its functio
 Before executing the playbook, verify that Ansible can reach the target host. The following commands leverage **SSH Agent Forwarding** (described in detail in the previous project) to validate connectivity
 ```bash
 # Display inventory structure
-ansible-inventory -i inventory/staging.yml --graph
+ansible-inventory -i inventory/stage.yml --graph
 # Inspect host variables
-ansible-inventory -i inventory/staging.yml --host testmysql
+ansible-inventory -i inventory/stage.yml --host testmysql
 # Test connectivity with ping module
-ansible testmysql -i inventory -m ansible.buildin.ping
+ansible testmysql -i inventory -m ansible.builtin.ping
 ```
 ![alt](images/6.png)
 
@@ -135,14 +252,39 @@ ansible testmysql -i inventory -m ansible.buildin.ping
 
 Customize the MySQL role by defining the necessary variables. In this configuration, we specify which hosts are permitted to connect to the database (in this case, the entire VPC CIDR: 172.31.0.0/16).
 
+
+```bash
+cd /home/ubuntu/ansible-config-mgt
+mkdir -p secrets
+ansible-vault create secrets/mysql.yml
+```
+Enter a new MySQL password in the editor:
+```vim
+vault_webaccess_password: "YOUR_PASSWORD"
+```
+Then add the path to .gitignore:
+
+```bash
+printf '\n/secrets/mysql.yml\n' >> .gitignore
+```
+The best practice is to keep configuration file free of plaintext credentials:
+```yml
+mysql_users:
+  - name: webaccess
+    host: "172.31.0.0/255.255.0.0"
+    password: "{{ vault_webaccess_password }}"
+    priv: "tooling.*:ALL"
+```
 ![alt](images/7.png)
 7. **Integrate the Role into the Playbook**
-Add the MySQL role to your main playbook (playbooks/site.yml):
+Add the MySQL role to your main playbook and load the Vault file in the var_files (playbooks/site.yml):
 
 ```yml
 - name: Set up Mysql
   hosts: database
   become: true
+  vars_files:
+    - /home/ubuntu/ansible-config-mgt/secrets/mysql.yml
   roles:
     - mysql
 ```
@@ -153,12 +295,17 @@ Add the MySQL role to your main playbook (playbooks/site.yml):
 Run the playbook to deploy and configure the MySQL database:
 
 ```bash
-ansible-playbook -i inventory/staging.yml playbooks/site.yml
+ansible-playbook -i inventory/stage.yml playbooks/site.yml --ask-vault-pass
 ```
 ![alt](images/10.png)
 
 
 ![alt](images/11.png)
+
+![alt](images/111.png)
+
+
+![alt](images/112.png)
 
 9. **Validate Database Access**
 
