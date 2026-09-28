@@ -456,7 +456,76 @@ ansible-playbook -i inventory/uat.yml playbooks/site.yml
 
 ![alt](images/30.png)
 
-![alt](images/31.png)
+
+#### Testing idempotence of roles
+
+An Ansible role is idempotent when applying it again to a host that is already in the desired state makes no further changes. To test this, I ran the same playbook against each environment repeatedly, without editing the playbook or changing the hosts between runs. I inspected both the individual task results and the PLAY RECAP: the acceptance criterion was changed=0, failed=0, and unreachable=0 for every intended host on the repeat run. 
+
+Test procedure:
+1. Select the environment for our case uat.yml then dev.yml
+2. Run the identical command again without making intervening changes. Check that tasks in the webserver, Apache, Nginx, and MySQL roles report ok or skipping rather than recurring changed results, where those roles apply
+3. Repeat the two-run test with the UAT and DEV inventories
+4. Compare the recaps by host. Investigate any non-zero changed count using the named task
+
+The following commands check connectivity, validate the playbook, show which hosts it targets, and run it against specific hosts:
+
+```bash
+# Check that inventory hosts are reachable through Ansible
+ansible -i inventory/dev.yml all -m ansible.builtin.ping
+# Check playbook syntax
+ansible-playbook -i inventory/dev.yml playbooks/site.yml --syntax-check --ask-vault-pass
+# List the hosts targeted by each play
+ansible-playbook -i inventory/dev.yml playbooks/site.yml --list-hosts --ask-vault-pass
+# Run the playbook
+ansible-playbook -i inventory/dev.yml playbooks/site.yml  --ask-vault-pass
+# Alternatively, specify the Python interpreter if host discovery fails
+ansible-playbook -i inventory/dev.yml playbooks/site.yml  --ask-vault-pass -e ansible_python_interpreter=/usr/bin/python3
+```
+
+To test idempotency, run the same final command twice with no changes to the playbook or hosts between runs. The first run may make necessary changes; on the second, verify that every intended host has changed=0, failed=0, and unreachable=0 in PLAY RECAP.
+
+![alt](images/117.png)
+
+![alt](images/118.png)
+
+![alt](images/119.png)
+
+![alt](images/120.png)
+
+![alt](images/121.png)
+
+![alt](images/122.png)
+
+![alt](images/123.png)
+
+![alt](images/124.png)
+
+![alt](images/125.png)
+
+![alt](images/1252.png)
+
+![alt](images/1253.png)
+
+![alt](images/126.png)
+
+![alt](images/127.png)
+
+![alt](images/128.png)
+
+![alt](images/129.png)
+
+![alt](images/130.png)
+
+![alt](images/131.png)
+
+![alt](images/132.png)
+
+![alt](images/133.png)
+
+![alt](images/134.png)
+
+![alt](images/135.png)
+
 
 ### Conclusion:
 
