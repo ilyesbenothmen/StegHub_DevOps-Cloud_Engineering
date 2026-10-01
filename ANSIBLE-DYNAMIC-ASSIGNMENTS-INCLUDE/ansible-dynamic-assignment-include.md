@@ -526,6 +526,37 @@ To test idempotency, run the same final command twice with no changes to the pla
 
 ![alt](images/135.png)
 
+#### Ansible Linting
+
+To validate the corrected playbooks, I created a separate working directory, cloned the GitHub repository, and created a dedicated fix/ansible-lint branch:
+
+```bash
+mkdir ansible-mgmt-fix
+cd ansible-mgmt-fix
+git clone https://github.com/ilyesbenothmen/ansible-config-mgt.git .
+git switch -c fix/ansible-lint
+```
+![alt](images/100.png)
+
+I then ran the idempotency-related Ansible Lint checks against the main playbook and its imported playbooks:
+
+```bash
+ansible-lint -t idempotency playbooks/site.yml
+ansible-lint -t idempotency dynamic-assignments/env-vars.yml
+ansible-lint -t idempotency static-assignments/db-servers.yml
+ansible-lint -t idempotency static-assignments/loadbalancers.yml
+ansible-lint -t idempotency static-assignments/webservers.yml
+ansible-lint -t idempotency playbooks/common.yml
+```
+![alt](images/101.png)
+
+All checks passed with 0 failures and 0 warnings. The main playbook was checked across five files, while each individual imported playbook was checked separately. These results show that the lint findings related to idempotency were corrected successfully.
+
+After verifying the lint results, I staged and committed the corrections:
+![alt](images/102.png)
+
+>[!NOTE]
+>The screenshots document the lint results, but they do not replace evidence from actual Dev and UAT runs. To demonstrate idempotency, we have included two consecutive playbook runs in each environment, with changed=0, failed=0, and unreachable=0 for all intended hosts.
 
 ### Conclusion:
 
