@@ -560,4 +560,4 @@ After verifying the lint results, I staged and committed the corrections:
 
 ### Conclusion:
 
-In this lab, you configured dynamic inventory assignment and used Ansible roles to deploy Apache web servers, an NGINX load balancer, and a MySQL database server. Organizing each service as a role keeps the automation modular and easier to maintain.
+In this lab, we configured dynamic inventory assignment and used Ansible roles to deploy Apache web servers, an NGINX load balancer, and a MySQL database server. Organizing each service as a role keeps the automation modular and easier to maintain.
